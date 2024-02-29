@@ -22,7 +22,7 @@ type server struct {
 
 func (s *server) PollAgentEvent(ctx context.Context, in *pb.PollAgentEventRequest) (*pb.PollAgentEventResponse, error) {
 	agentEvent1 := pb.AgentEvent{EventId: 1, DeviceId: "11111111-1111-1111-1111-111111111111", EventType: pb.AgentEventType_AGENT_EVENT_REGISTER}
-	agentEvent2 := pb.AgentEvent{EventId: 1, DeviceId: "22222222-2222-2222-2222-222222222222", EventType: pb.AgentEventType.AgentEventType_AGENT_EVENT_UPDATE}
+	agentEvent2 := pb.AgentEvent{EventId: 1, DeviceId: "22222222-2222-2222-2222-222222222222", EventType: pb.AgentEventType_AGENT_EVENT_UPDATE}
 
 	agentEventResponse := pb.PollAgentEventResponse{}
 	agentEventResponse.Events = append(agentEventResponse.Events, &agentEvent1)
