@@ -7,7 +7,7 @@ import (
 	"log"
 	"net"
 
-	pb "my_xbc/helloworld"
+	pb "mx/helloworld"
 
 	"google.golang.org/grpc"
 )
@@ -16,15 +16,18 @@ var (
 	port = flag.Int("port", 50051, "The server port")
 )
 
-// server is used to implement helloworld.GreeterServer.
 type server struct {
 	pb.UnimplementedGreeterServer
 }
 
-// SayHello implements helloworld.GreeterServer
-func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
-	log.Printf("Received: %v", in.GetName())
-	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
+func (s *server) PollAgentEvent(ctx context.Context, in *pb.PollAgentEventRequest) (*pb.PollAgentEventResponse, error) {
+	agentEvent1 := pb.AgentEvent{event_id: 1, device_id: "11111111-1111-1111-1111-111111111111", event_type: pb.AgentEventType.AGENT_EVENT_REGISTER}
+	agentEvent2 := pb.AgentEvent{event_id: 1, device_id: "22222222-2222-2222-2222-222222222222", event_type: pb.AgentEventType.AGENT_EVENT_UPDATE}
+
+	agentEventResponse := pb.PollAgentEventResponse{}
+	agentEventResponse.Events = append(agentEventResponse.Events, agentEvent1, agentEvent2)
+
+	return &agentEventResponse, nil
 }
 
 func main() {
@@ -36,7 +39,7 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	pb.RegisterGreeterServer(s, &server{})
+	pb.RegisterOutboxServiceServer(s, &server{})
 
 	log.Printf("server listening at %v", lis.Addr())
 
