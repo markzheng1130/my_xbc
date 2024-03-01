@@ -7,7 +7,7 @@
 
 ### [run]
 - step 1, go run ./mock_ams_server/main.go
-- step 2, go run ./mock_ofs_server/main.go
+- step 2, go run ./mock_grpc_api_client/main.go
 
 ### [re-build proto]
 - step 1, cd to "mx" folder
