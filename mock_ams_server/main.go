@@ -11,6 +11,7 @@ import (
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 var (
@@ -22,7 +23,7 @@ type server struct {
 }
 
 func (s *server) PollAgentEvent(ctx context.Context, in *pb.PollAgentEventRequest) (*pb.PollAgentEventResponse, error) {
-	log.Printf("pn=[%d], c=[%d]\n", in.GetPartitionNumber(), in.GetCount())
+	log.Printf("[Received poll API][pn][%d][c][%d]\n", in.GetPartitionNumber(), in.GetCount())
 
 	agentEventResponse := pb.PollAgentEventResponse{}
 
@@ -46,6 +47,11 @@ func (s *server) PollAgentEvent(ctx context.Context, in *pb.PollAgentEventReques
 	}
 
 	return &agentEventResponse, nil
+}
+
+func (s *server) CommitAgentEvent(ctx context.Context, in *pb.CommitAgentEventRequest) (*emptypb.Empty, error) {
+	log.Printf("[Received commit API][%v][%v][%v]\n", in.PartitionNumber, in.OffsetId, in.ConsumerName)
+	return &emptypb.Empty{}, nil
 }
 
 func main() {

@@ -38,6 +38,7 @@ func main() {
 
 	defer cancel()
 
+	// step1, invoke poll agent event API.
 	r, err := c.PollAgentEvent(ctx, &pb.PollAgentEventRequest{PartitionNumber: *partitionNumber, Count: *count})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
@@ -51,7 +52,18 @@ func main() {
 
 		fmt.Printf("[%v][%v][%v][%v]\n", agentEvent.EventId, agentEvent.DeviceId, agentEvent.EventType, contents)
 	}
+
+	// step2, invoke commit API.
+	offsetId := count
+	consumerName := "mockOFS"
+
+	r2, err := c.CommitAgentEvent(ctx, &pb.CommitAgentEventRequest{PartitionNumber: *partitionNumber, OffsetId: *offsetId, ConsumerName: consumerName})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+
+	log.Printf("[Commit result][%v][%T]\n", r2, r2)
 }
 
-// go run ./mock_ofs_server/main.go -pn=2 -c=5;
+// go run ./mock_grpc_api_client/main.go --pn=2 -c=5
 // sudo lsof -i:50051
