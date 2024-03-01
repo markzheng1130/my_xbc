@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -13,18 +14,15 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-const (
-	defaultName = "world"
-)
-
 var (
 	addr            = flag.String("addr", "localhost:50051", "the address to connect to")
-	partitionNumber = int64(2)
-	count           = int64(5000)
+	partitionNumber = flag.Int64("pn", 0, "A table partition's number")
+	count           = flag.Int64("c", 0, "Max agent event count")
 )
 
 func main() {
 	flag.Parse()
+
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -40,12 +38,20 @@ func main() {
 
 	defer cancel()
 
-	r, err := c.PollAgentEvent(ctx, &pb.PollAgentEventRequest{PartitionNumber: partitionNumber, Count: count})
+	r, err := c.PollAgentEvent(ctx, &pb.PollAgentEventRequest{PartitionNumber: *partitionNumber, Count: *count})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
 
 	for _, agentEvent := range r.GetEvents() {
-		fmt.Printf("[Get agent event][%v]\n\n", agentEvent)
+		var contents map[string]interface{}
+		if err := json.Unmarshal([]byte(agentEvent.Contents), &contents); err != nil {
+			fmt.Printf("Error: %v\n\n", err)
+		}
+
+		fmt.Printf("[%v][%v][%v][%v]\n", agentEvent.EventId, agentEvent.DeviceId, agentEvent.EventType, contents)
 	}
 }
+
+// go run ./mock_ofs_server/main.go -pn=2 -c=5;
+// sudo lsof -i:50051

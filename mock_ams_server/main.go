@@ -9,6 +9,7 @@ import (
 
 	pb "mx/outbox_service"
 
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
 )
 
@@ -21,12 +22,28 @@ type server struct {
 }
 
 func (s *server) PollAgentEvent(ctx context.Context, in *pb.PollAgentEventRequest) (*pb.PollAgentEventResponse, error) {
-	agentEvent1 := pb.AgentEvent{EventId: 1, DeviceId: "11111111-1111-1111-1111-111111111111", EventType: pb.AgentEventType_AGENT_EVENT_REGISTER}
-	agentEvent2 := pb.AgentEvent{EventId: 1, DeviceId: "22222222-2222-2222-2222-222222222222", EventType: pb.AgentEventType_AGENT_EVENT_UPDATE}
+	log.Printf("pn=[%d], c=[%d]\n", in.GetPartitionNumber(), in.GetCount())
 
 	agentEventResponse := pb.PollAgentEventResponse{}
-	agentEventResponse.Events = append(agentEventResponse.Events, &agentEvent1)
-	agentEventResponse.Events = append(agentEventResponse.Events, &agentEvent2)
+
+	for i := 0; i < int(in.GetCount()); i++ {
+		agentEvent := pb.AgentEvent{
+			EventId:   int64(i),
+			DeviceId:  uuid.New().String(),
+			EventType: pb.AgentEventType_AGENT_EVENT_UPDATE,
+			Contents: string(fmt.Sprintf(`{
+				"name": "person-([%d])",
+				"contact" : {
+				  "address": "taiwan, taipei",
+				  "phones": {
+					"mobile": "0987-654-321"
+				  }
+				}
+			  }`, i)),
+		}
+
+		agentEventResponse.Events = append(agentEventResponse.Events, &agentEvent)
+	}
 
 	return &agentEventResponse, nil
 }
