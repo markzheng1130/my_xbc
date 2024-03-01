@@ -1,0 +1,20 @@
+version: '3.2'
+
+services:
+  zookeeper_ut:
+    image: 'bitnami/zookeeper:latest'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "2181" ]
+      interval: 1s
+      timeout: 1s
+      retries: 60
+  kafka_ut:
+    image: bitnami/kafka:2.4.1
+    env_file:
+      - .ut.env
+    ports:
+      - "9092:9092"
+    links:
+      - zookeeper_ut
