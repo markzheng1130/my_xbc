@@ -23,7 +23,7 @@ type server struct {
 }
 
 func (s *server) PollAgentEvent(ctx context.Context, in *pb.PollAgentEventRequest) (*pb.PollAgentEventResponse, error) {
-	log.Printf("[Received poll API][pn][%d][c][%d]\n", in.GetPartitionNumber(), in.GetCount())
+	log.Printf("[Received poll API][partition number][%d][count][%d]\n", in.GetPartitionNumber(), in.GetCount())
 
 	agentEventResponse := pb.PollAgentEventResponse{}
 
@@ -50,7 +50,7 @@ func (s *server) PollAgentEvent(ctx context.Context, in *pb.PollAgentEventReques
 }
 
 func (s *server) CommitAgentEvent(ctx context.Context, in *pb.CommitAgentEventRequest) (*emptypb.Empty, error) {
-	log.Printf("[Received commit API][%v][%v][%v]\n", in.PartitionNumber, in.OffsetId, in.ConsumerName)
+	log.Printf("[Received commit API][partition number][%v][offset id][%v][consumer name][%v]\n", in.PartitionNumber, in.OffsetId, in.ConsumerName)
 	return &emptypb.Empty{}, nil
 }
 
