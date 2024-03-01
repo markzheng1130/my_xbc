@@ -12,7 +12,7 @@
 
 ### [run]
 - step 1, go run ./mock_ams_server/main.go
-- step 2, go run ./mock_grpc_api_client/main.go
+- step 2, go run ./mock_grpc_api_client/main.go --pn=2 --c=5
 
 ### [re-build proto]
 - step 1, cd to "my_xbc" folder
