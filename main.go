@@ -6,17 +6,18 @@ import (
 )
 
 func main() {
-	// go kafkahelper.RunConsumer()
+	go kafkahelper.RunConsumer()
+
 	kafkahelper.Init()
 	go func() {
-		for true {
+		for {
 			kafkahelper.ProduceEvent("mock_message")
 			time.Sleep(1 * time.Second)
 		}
 
 	}()
 
-	for true {
+	for {
 		time.Sleep(1 * time.Second)
 	}
 
