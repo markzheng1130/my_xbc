@@ -8,10 +8,11 @@ import (
 
 var (
 	bootstrapServers = "localhost:9092"
-	topicList        = []string{"topic1", "topic2"}
+	topicList        = []string{"my_topic_1", "my_topic_2"}
+	partitionList    = []int{1, 2}
 )
 
-func Run() {
+func RunProducer() {
 	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": bootstrapServers})
 	if err != nil {
 		log.Fatalf("Init kafka producer client encountered exceptions: %v", err)
@@ -19,9 +20,9 @@ func Run() {
 
 	defer p.Close()
 
-	for _, topic := range topicList {
+	for i, topic := range topicList {
 		err = p.Produce(&kafka.Message{
-			TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
+			TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: int32(partitionList[i])},
 			Value:          []byte("mock_message"),
 		}, nil)
 
