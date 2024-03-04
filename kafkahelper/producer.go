@@ -9,21 +9,23 @@ import (
 var (
 	bootstrapServers = "localhost:9092"
 	topicList        = []string{"my_topic_1", "my_topic_2"}
-	partitionList    = []int{1, 2}
+	producerClient   *kafka.Producer
 )
 
-func RunProducer() {
-	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": bootstrapServers})
+func Init() {
+	var err error
+	producerClient, err = kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": bootstrapServers})
 	if err != nil {
 		log.Fatalf("Init kafka producer client encountered exceptions: %v", err)
 	}
+}
 
-	defer p.Close()
+func ProduceEvent(message string) {
 
-	for i, topic := range topicList {
-		err = p.Produce(&kafka.Message{
-			TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: int32(partitionList[i])},
-			Value:          []byte("mock_message"),
+	for _, topic := range topicList {
+		err := producerClient.Produce(&kafka.Message{
+			TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
+			Value:          []byte(message),
 		}, nil)
 
 		if err != nil {
@@ -32,7 +34,7 @@ func RunProducer() {
 	}
 
 	go func() {
-		for e := range p.Events() {
+		for e := range producerClient.Events() {
 			switch ev := e.(type) {
 			case *kafka.Message:
 				if ev.TopicPartition.Error != nil {
@@ -45,5 +47,5 @@ func RunProducer() {
 		}
 	}()
 
-	p.Flush(15 * 1000)
+	producerClient.Flush(15 * 1000)
 }
