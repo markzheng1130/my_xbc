@@ -3,6 +3,7 @@ version: '3.2'
 services:
   zookeeper_ut:
     image: 'bitnami/zookeeper:latest'
+    platform: linux/amd64
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
     healthcheck:
@@ -12,6 +13,7 @@ services:
       retries: 60
   kafka_ut:
     image: bitnami/kafka:2.4.1
+    platform: linux/amd64
     env_file:
       - .ut.env
     ports:
