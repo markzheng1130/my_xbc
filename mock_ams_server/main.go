@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	pb "mx/outbox_service"
 
@@ -29,7 +30,7 @@ func (s *server) PollAgentEvent(ctx context.Context, in *pb.PollAgentEventReques
 
 	for i := 0; i < int(in.GetCount()); i++ {
 		agentEvent := pb.AgentEvent{
-			EventId:   int64(i),
+			EventId:   time.Now().UnixNano(),
 			DeviceId:  uuid.New().String(),
 			EventType: pb.AgentEventType_AGENT_EVENT_UPDATE,
 			Contents: string(fmt.Sprintf(`{
