@@ -8,7 +8,7 @@ import (
 
 var (
 	run     = true
-	groupId = "my_group_5"
+	groupId = "my_group_7"
 )
 
 func RunConsumer() {
@@ -21,14 +21,14 @@ func RunConsumer() {
 		log.Fatalf("Init kafka consumer client encountered exceptions: %v", err)
 	}
 
-	err = c.SubscribeTopics(topicList, nil)
+	_ = c.SubscribeTopics(topicList, nil)
 
-	for run == true {
+	for run {
 		ev := c.Poll(100)
 		switch e := ev.(type) {
 
 		case *kafka.Message:
-			log.Printf("[Received message][%v]", string(e.Value))
+			log.Printf("[Received message][%v]%v", string(e.Value), e.Headers)
 
 		case kafka.Error:
 			log.Printf("%% Error: %v\n", e)
