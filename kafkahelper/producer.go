@@ -8,7 +8,7 @@ import (
 
 var (
 	bootstrapServers = "localhost:9092"
-	topicList        = []string{"my_topic_1", "my_topic_2"}
+	topicList        = []string{"xbc-agent-event", "xbc-agent-internal-activity"}
 	producerClient   *kafka.Producer
 )
 

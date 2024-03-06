@@ -8,7 +8,7 @@ import (
 	"net"
 	"time"
 
-	pb "mx/outbox_service"
+	pb "mx/xbc_v2"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
