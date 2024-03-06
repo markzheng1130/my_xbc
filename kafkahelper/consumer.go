@@ -8,7 +8,7 @@ import (
 
 var (
 	run     = true
-	groupId = "my_group_7"
+	groupId = "my_group_0"
 )
 
 func RunConsumer() {
