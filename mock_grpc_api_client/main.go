@@ -8,7 +8,7 @@ import (
 	"log"
 	"time"
 
-	pb "mx/outbox_service"
+	pb "mx/xbc_v2"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
