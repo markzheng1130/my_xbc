@@ -1,6 +1,8 @@
 package kafkahelper
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
@@ -8,7 +10,7 @@ import (
 
 var (
 	run     = true
-	groupId = "my_group_0"
+	groupId = "my_group_1"
 )
 
 func RunConsumer() {
@@ -28,7 +30,14 @@ func RunConsumer() {
 		switch e := ev.(type) {
 
 		case *kafka.Message:
-			log.Printf("[Received message][%v]%v", string(e.Value), e.Headers)
+			var m map[string]interface{}
+			if err := json.Unmarshal(e.Value, &m); err != nil {
+				fmt.Printf("Error: %v\n\n", err)
+			} else {
+				fmt.Printf("%v\n\n", m)
+			}
+
+			log.Printf("[Received message]%v, %v", e.Headers, m)
 
 		case kafka.Error:
 			log.Printf("%% Error: %v\n", e)
