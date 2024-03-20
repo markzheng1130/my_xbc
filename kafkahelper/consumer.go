@@ -33,8 +33,6 @@ func RunConsumer() {
 			var m map[string]interface{}
 			if err := json.Unmarshal(e.Value, &m); err != nil {
 				fmt.Printf("Error: %v\n\n", err)
-			} else {
-				fmt.Printf("%v\n\n", m)
 			}
 
 			log.Printf("[Received message]%v", string(e.Value))
