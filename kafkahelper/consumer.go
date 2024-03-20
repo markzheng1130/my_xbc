@@ -37,7 +37,8 @@ func RunConsumer() {
 				fmt.Printf("%v\n\n", m)
 			}
 
-			log.Printf("[Received message]%v, %v", e.Headers, m)
+			log.Printf("[Received message]%v", string(e.Value))
+			// log.Printf("[Received message]%v, %v", e.Headers, m)
 
 		case kafka.Error:
 			log.Printf("%% Error: %v\n", e)
