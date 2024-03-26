@@ -10,7 +10,7 @@ import (
 
 var (
 	run     = true
-	groupId = "my_group_1"
+	groupId = "my_group_2"
 )
 
 func RunConsumer() {
@@ -35,7 +35,7 @@ func RunConsumer() {
 				fmt.Printf("Error: %v\n\n", err)
 			}
 
-			log.Printf("[Received message]%v", string(e.Value))
+			log.Printf("[Received message] %v, %v", e.Headers, string(e.Value))
 			// log.Printf("[Received message]%v, %v", e.Headers, m)
 
 		case kafka.Error:
