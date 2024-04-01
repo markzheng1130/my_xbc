@@ -10,7 +10,7 @@ import (
 
 var (
 	run     = true
-	groupId = "my_group_2"
+	groupId = "my_group_4"
 )
 
 func RunConsumer() {
